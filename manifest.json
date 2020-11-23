@@ -1,0 +1,14 @@
+{
+    "name": "Spotify Ad Skipper",
+    "version": "1.0",
+    "description": "Steers clear of ads",
+    "manifest_version": 2,
+    "web_accessible_resources" : ["/js/skipper.js"],
+    "content_scripts": [
+        {
+          "matches": [ "https://open.spotify.com/*" ],
+          "css": ["css/content.css"],
+          "js": ["js/content.js"]
+        }
+    ]
+}

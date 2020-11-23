@@ -1,0 +1,33 @@
+div.control-button-wrapper.wheel button {
+  fill: transparent;
+  stroke: #b3b3b3;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+div.control-button-wrapper.wheel button svg {
+  width: 24px;
+  height: 24px;
+}
+
+div.control-button-wrapper.wheel button svg.spinning {
+  stroke: #1db954;
+  animation-name: spin;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; 
+}
+
+div.control-button-wrapper.wheel button:hover {
+  stroke: #fff;
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}
