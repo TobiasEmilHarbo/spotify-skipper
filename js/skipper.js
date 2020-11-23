@@ -1,5 +1,7 @@
 const createElement = document.createElement; /* A backup reference to the browser's original document.createElement */
+const addEventListener = window.addEventListener; /* A backup reference to the browser's original document.createElement */
 
+const skip = 15;
 const players = [];
 
 document.createElement = function(tagName) {
@@ -70,8 +72,9 @@ const checker = setInterval(() => {
     `;
 
     skipButton.addEventListener('click', () => {
-        if(!players[0]) return;
-        players[0].currentTime = players[0].duration;
+        const player = players[0]
+        if(!player) return;
+        player.currentTime = player.duration;
     }) 
 
     buttonWrapper.appendChild(skipButton);
@@ -80,3 +83,33 @@ const checker = setInterval(() => {
 
     clearInterval(checker);
 }, 10)
+
+document.addEventListener('keyup', event => keyboard(event.key));
+
+const keyboard = (key) => {
+    const player = players[0]
+
+    if(isNumericKey(key))
+    {
+        skipTo(player, parseInt(key))
+    }
+    else if(key == 'ArrowLeft')
+    {
+        if(!player) return
+        player.currentTime = player.currentTime-skip
+    }
+    else if(key == 'ArrowRight')
+    {
+        if(!player) return
+        player.currentTime = player.currentTime+skip
+    }
+}
+
+const isNumericKey = (key) => {
+    return Number.isInteger(parseInt(key))
+}
+
+const skipTo = (player, percent) => {
+    const chuck = player.duration / 10
+    player.currentTime = chuck*percent
+}
