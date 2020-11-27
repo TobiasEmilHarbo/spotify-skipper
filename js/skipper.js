@@ -1,8 +1,8 @@
 const createElement = document.createElement; /* A backup reference to the browser's original document.createElement */
-const addEventListener = window.addEventListener; /* A backup reference to the browser's original document.createElement */
 
 const skip = 15;
 const players = [];
+let playbackRate = 1
 
 document.createElement = function(tagName) {
     
@@ -24,18 +24,18 @@ document.createElement = function(tagName) {
 
             const url = new URL(player.src)
             if('audio-akp-quic-control-spotify-com.akamaized.net' == url.host) {
-                console.log('PAUSE');
-                player.pause()
+                player.muted = true
             }
             else if(wheel) {
                 wheel.classList.remove('spinning')
+                player.muted = false
+                player.playbackRate = playbackRate
             }
         })
 
         player.addEventListener('canplaythrough', () => {
             const url = new URL(player.src)
             if('audio-akp-quic-control-spotify-com.akamaized.net' == url.host) {
-                console.log('SKIP');
                 player.currentTime = player.duration;
             }
         })
@@ -45,18 +45,12 @@ document.createElement = function(tagName) {
 };
 
 const checker = setInterval(() => {
-    const buttonControl = document.querySelector('div.player-controls__buttons');
+    const playerControls = document.querySelector('div.player-controls__buttons');
+    const extraControls = document.querySelector('div.now-playing-bar__right div.ExtraControls');
 
-    if(!buttonControl) return;
+    if(!playerControls) return;
 
-    const buttonWrapper = document.createElement('div');
-
-    buttonWrapper.setAttribute('class', 'control-button-wrapper wheel');
-
-    const skipButton = document.createElement('button');
-    skipButton.setAttribute('class', 'control-button');
-
-    skipButton.innerHTML = `
+    const skipButton = createButton('wheel', `
         <svg class="wheel">
             <circle cx="12" cy="12" r="7.8"/>
             <circle cx="12" cy="12" r="2.3"/>
@@ -69,17 +63,79 @@ const checker = setInterval(() => {
             <line x1="10.3" y1="13.7" x2="4.5" y2="19.5"/>
             <line x1="13.7" y1="10.3" x2="19.5" y2="4.5"/>
         </svg>
-    `;
-
-    skipButton.addEventListener('click', () => {
-        const player = players[0]
+    `, (event) => {
+        const player = players[0];
         if(!player) return;
+        console.log('MANUEL SKIP')
         player.currentTime = player.duration;
-    }) 
+    })
 
-    buttonWrapper.appendChild(skipButton);
+    extraControls.prepend(skipButton);
 
-    buttonControl.appendChild(buttonWrapper);
+    const playbackSpeedAction = (playbackSpeed, button) => {
+        const player = players[0];
+        if(!player) return;
+        
+        button.innerHTML = `x${playbackSpeed.speed}`
+        playbackRate = playbackSpeed.speed
+        player.playbackRate = playbackSpeed.speed
+    }
+
+    const playbackSpeeds = [
+        {
+            label: '0.25',
+            speed: 0.25,
+            action: playbackSpeedAction
+        },
+        {
+            label: '0.5',
+            speed: 0.5,
+            action: playbackSpeedAction
+        },
+        {
+            label: '0.75',
+            speed: 0.75,
+            action: playbackSpeedAction
+        },
+        {
+            label: 'Normal',
+            speed: 1,
+            action: playbackSpeedAction
+        },
+        {
+            label: '1.25',
+            speed: 1.25,
+            action: playbackSpeedAction
+        },
+        {
+            label: '1.5',
+            speed: 1.5,
+            action: playbackSpeedAction
+        },
+        {
+            label: '1.75',
+            speed: 1.75,
+            action: playbackSpeedAction
+        },
+        {
+            label: '2',
+            speed: 2,
+            action: playbackSpeedAction
+        },
+    ]
+
+    const playbackSpeedButton = createButton('playback-speed', '1x', (event) => {
+        const contextMenuPosition = {
+            x: event.target.parentNode.offsetLeft,
+            y: event.target.parentNode.offsetTop - 328
+        }
+
+        const contextMenu = createContextMenu(playbackSpeeds, contextMenuPosition, event.target)
+
+        document.body.appendChild(contextMenu)
+    })
+
+    playerControls.prepend(playbackSpeedButton);
 
     clearInterval(checker);
 }, 10)
@@ -87,29 +143,95 @@ const checker = setInterval(() => {
 document.addEventListener('keyup', event => keyboard(event.key));
 
 const keyboard = (key) => {
-    const player = players[0]
+    const player = players[0];
 
     if(isNumericKey(key))
     {
-        skipTo(player, parseInt(key))
+        skipTo(player, parseInt(key));
     }
     else if(key == 'ArrowLeft')
     {
-        if(!player) return
-        player.currentTime = player.currentTime-skip
+        if(!player) return;
+        player.currentTime = player.currentTime - skip;
     }
     else if(key == 'ArrowRight')
     {
-        if(!player) return
-        player.currentTime = player.currentTime+skip
+        if(!player) return;
+        player.currentTime = player.currentTime + skip;
     }
 }
 
 const isNumericKey = (key) => {
-    return Number.isInteger(parseInt(key))
+    return Number.isInteger(parseInt(key));
 }
 
 const skipTo = (player, percent) => {
-    const chuck = player.duration / 10
-    player.currentTime = chuck*percent
+    const chuck = player.duration / 10;
+    player.currentTime = chuck * percent;
 }
+
+const createContextMenu = (items, position, target) => {
+    const contextMenu = document.createElement('div')
+    const wrapperInner = document.createElement('div')
+    
+    contextMenu.id = 'tippy-1'
+    contextMenu.style.position = 'absolute'
+    contextMenu.style.zIndex = 9999
+    contextMenu.style.transform = `translate(${position.x}px, ${position.y}px)`
+
+    const ul = document.createElement('ul')
+    ul.classList.add('_8bfd0bd3ba9dd8201e38b1622bc74fb6-scss')
+
+    wrapperInner.appendChild(ul);
+    contextMenu.appendChild(wrapperInner)
+
+    items.forEach(item => {
+        const li = document.createElement('li')
+        li.classList.add('b46bba08e80cdd2d0da8cca1e49c7440-scss')
+
+        const button = document.createElement('button')
+
+        button.innerText = item.label
+
+        button.classList.add('d2a8e42f26357f2d21c027f30d93fb64-scss')
+
+        button.addEventListener('click', () => {
+            document.body.removeChild(contextMenu)
+            item.action(item, target)
+        })
+
+        li.appendChild(button)
+
+        ul.appendChild(li)
+    });
+
+    return contextMenu
+}
+
+const createButton = (className, innerHTML, onClick) => {
+    const buttonWrapper = document.createElement('div');
+
+    buttonWrapper.setAttribute('class', `control-button-wrapper ${className}`);
+
+    const button = document.createElement('button');
+    button.setAttribute('class', 'control-button');
+
+    button.innerHTML = innerHTML
+    button.addEventListener('click', onClick)
+
+    buttonWrapper.appendChild(button);
+
+    return buttonWrapper
+}
+
+const removeContextMenu = (event) => {
+    if(event.target.parentNode.className.includes('control-button-wrapper playback-speed')) return
+
+    const contextMenu = document.getElementById('tippy-1')
+    if(!contextMenu) return
+
+    document.body.removeChild(contextMenu)
+}
+
+document.body.addEventListener('contextmenu', removeContextMenu)
+document.body.addEventListener('click', removeContextMenu)
