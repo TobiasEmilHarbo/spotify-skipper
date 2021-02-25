@@ -1,7 +1,7 @@
 {
-    "name": "Spotify Ad Skipper",
+    "name": "Spotify Skipper - playback speed and extended keyboard control",
     "version": "1.0",
-    "description": "Steers clear of ads",
+    "description": "Control the playback speed and skip through tracks and podcasts with the numeric and arrow keys.",
     "manifest_version": 2,
     "web_accessible_resources" : ["/js/skipper.js"],
     "content_scripts": [

@@ -196,7 +196,6 @@ const createContextMenu = (items, position, target) => {
         button.classList.add('d2a8e42f26357f2d21c027f30d93fb64-scss')
 
         button.addEventListener('click', () => {
-            document.body.removeChild(contextMenu)
             item.action(item, target)
         })
 

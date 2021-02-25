@@ -1,3 +1,7 @@
+div.control-button--active-dot .control-button {
+  color: #1db954;
+}
+
 div.control-button-wrapper.wheel button {
   fill: transparent;
   stroke: #b3b3b3;
