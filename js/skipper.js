@@ -46,7 +46,7 @@ document.createElement = function(tagName) {
 
 const checker = setInterval(() => {
     const playerControls = document.querySelector('div.player-controls__buttons');
-    const extraControls = document.querySelector('div.now-playing-bar__right div.ExtraControls');
+    const extraControls = document.querySelector('div.Root__now-playing-bar div.ExtraControls');
 
     if(!playerControls) return;
 
@@ -70,7 +70,8 @@ const checker = setInterval(() => {
         player.currentTime = player.duration;
     })
 
-    extraControls.prepend(skipButton);
+    if(!!extraControls)
+        extraControls.prepend(skipButton);
 
     const playbackSpeedAction = (playbackSpeed, button) => {
         const player = players[0];
