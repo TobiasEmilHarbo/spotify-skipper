@@ -70,6 +70,8 @@ const checker = setInterval(() => {
         player.currentTime = player.duration;
     })
 
+    // _46e671f2323a45b17a6f4a3d15c2961f-scss
+
     if(!!extraControls)
         extraControls.prepend(skipButton);
 
@@ -77,6 +79,11 @@ const checker = setInterval(() => {
         const player = players[0];
         if(!player) return;
         
+        if(playbackSpeed.speed != 1) {
+            button.parentNode.classList.add('ebfd411a126f1e7bea6133f21b4ef88e-scss')
+            button.parentNode.classList.add('_46e671f2323a45b17a6f4a3d15c2961f-scss')
+        }
+
         button.innerHTML = `x${playbackSpeed.speed}`
         playbackRate = playbackSpeed.speed
         player.playbackRate = playbackSpeed.speed
@@ -210,11 +217,12 @@ const createContextMenu = (items, position, target) => {
 
 const createButton = (className, innerHTML, onClick) => {
     const buttonWrapper = document.createElement('div');
-
-    buttonWrapper.setAttribute('class', `control-button-wrapper ${className}`);
+    
+    buttonWrapper.classList.add('control-button-wrapper')
+    buttonWrapper.classList.add(className)
 
     const button = document.createElement('button');
-    button.setAttribute('class', 'control-button');
+    button.classList.add('control-button')
 
     button.innerHTML = innerHTML
     button.addEventListener('click', onClick)
