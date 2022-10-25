@@ -5,4 +5,4 @@ function injectScript(file, node) {
     s.setAttribute('src', file);
     th.appendChild(s);
 }
-injectScript( chrome.extension.getURL('/js/skipper.js'), 'body');
+injectScript( chrome.runtime.getURL('/js/skipper.js'), 'body');
