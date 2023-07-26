@@ -18,18 +18,11 @@ document.createElement = function(tagName) {
 
         player.addEventListener('loadeddata', () => {
 
-            const wheel = document.querySelector('svg.wheel')
-
-            if(wheel) {
-                wheel?.classList.add('spinning')
-            }
-
             const url = new URL(player.src)
             if(shipHosts.includes(url.host)) {
                 player.muted = true
             }
             else {
-                wheel?.classList.remove('spinning')
                 player.muted = false
                 player.playbackRate = playbackRate
             }
@@ -154,6 +147,8 @@ document.addEventListener('keyup', event => keyboard(event.key));
 
 const keyboard = (key) => {
     const player = players[0];
+
+    if(document.activeElement.tagName === "INPUT") return
 
     if(isNumericKey(key))
     {
