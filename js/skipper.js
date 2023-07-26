@@ -4,6 +4,8 @@ const skip = 15;
 const players = [];
 let playbackRate = 1
 
+const shipHosts = ['audio-ak-spotify-com.akamaized.net']
+
 document.createElement = function(tagName) {
     
     const element = createElement.call(document, tagName);
@@ -19,15 +21,15 @@ document.createElement = function(tagName) {
             const wheel = document.querySelector('svg.wheel')
 
             if(wheel) {
-                wheel.classList.add('spinning')
+                wheel?.classList.add('spinning')
             }
 
             const url = new URL(player.src)
-            if('audio-akp-quic-control-spotify-com.akamaized.net' == url.host) {
+            if(shipHosts.includes(url.host)) {
                 player.muted = true
             }
-            else if(wheel) {
-                wheel.classList.remove('spinning')
+            else {
+                wheel?.classList.remove('spinning')
                 player.muted = false
                 player.playbackRate = playbackRate
             }
@@ -35,7 +37,7 @@ document.createElement = function(tagName) {
 
         player.addEventListener('canplaythrough', () => {
             const url = new URL(player.src)
-            if('audio-akp-quic-control-spotify-com.akamaized.net' == url.host) {
+            if(shipHosts.includes(url.host)) {
                 player.currentTime = player.duration;
             }
         })
