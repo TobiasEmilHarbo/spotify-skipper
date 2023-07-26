@@ -1,6 +1,6 @@
 const createElement = document.createElement; /* A backup reference to the browser's original document.createElement */
 
-const skip = 15;
+const skipSeconds = 15;
 const players = [];
 let playbackRate = 1
 
@@ -17,14 +17,16 @@ document.createElement = function(tagName) {
         players.push(player);
 
         player.addEventListener('loadeddata', () => {
-
+            
             const url = new URL(player.src)
             if(shipHosts.includes(url.host)) {
                 player.muted = true
+                document.querySelector('svg.wheel')?.classList.add('spinning')
             }
             else {
                 player.muted = false
                 player.playbackRate = playbackRate
+                document.querySelector('svg.wheel')?.classList.remove('spinning')
             }
         })
 
@@ -41,7 +43,7 @@ document.createElement = function(tagName) {
 
 const checker = setInterval(() => {
     const playerControls = document.querySelector('div.player-controls__buttons');
-    const extraControls = document.querySelector('div.Root__now-playing-bar div.ExtraControls');
+    const extraControls = document.querySelector('div.mwpJrmCgLlVkJVtWjlI1');
 
     if(!playerControls) return;
 
@@ -58,14 +60,11 @@ const checker = setInterval(() => {
             <line x1="10.3" y1="13.7" x2="4.5" y2="19.5"/>
             <line x1="13.7" y1="10.3" x2="19.5" y2="4.5"/>
         </svg>
-    `, (event) => {
+    `, () => {
         const player = players[0];
         if(!player) return;
-        console.log('MANUEL SKIP')
         player.currentTime = player.duration;
     })
-
-    // _46e671f2323a45b17a6f4a3d15c2961f-scss
 
     if(!!extraControls)
         extraControls.prepend(skipButton);
@@ -74,9 +73,12 @@ const checker = setInterval(() => {
         const player = players[0];
         if(!player) return;
         
-        if(playbackSpeed.speed != 1) {
+        if(playbackSpeed.speed !== 1) {
             button.parentNode.classList.add('ebfd411a126f1e7bea6133f21b4ef88e-scss')
             button.parentNode.classList.add('_46e671f2323a45b17a6f4a3d15c2961f-scss')
+        } else {
+            button.parentNode.classList.remove('ebfd411a126f1e7bea6133f21b4ef88e-scss')
+            button.parentNode.classList.remove('_46e671f2323a45b17a6f4a3d15c2961f-scss')
         }
 
         button.innerHTML = `x${playbackSpeed.speed}`
@@ -127,7 +129,7 @@ const checker = setInterval(() => {
         },
     ]
 
-    const playbackSpeedButton = createButton('playback-speed', '1x', (event) => {
+    const playbackSpeedButton = createButton('playback-speed', 'x1', (event) => {
         const contextMenuPosition = {
             x: event.target.parentNode.offsetLeft,
             y: event.target.parentNode.offsetTop - 328
@@ -148,7 +150,7 @@ document.addEventListener('keyup', event => keyboard(event.key));
 const keyboard = (key) => {
     const player = players[0];
 
-    if(document.activeElement.tagName === "INPUT") return
+    if(document.activeElement.tagName === 'INPUT') return;
 
     if(isNumericKey(key))
     {
@@ -157,12 +159,12 @@ const keyboard = (key) => {
     else if(key == 'ArrowLeft')
     {
         if(!player) return;
-        player.currentTime = player.currentTime - skip;
+        player.currentTime = player.currentTime - skipSeconds;
     }
     else if(key == 'ArrowRight')
     {
         if(!player) return;
-        player.currentTime = player.currentTime + skip;
+        player.currentTime = player.currentTime + skipSeconds;
     }
 }
 
@@ -185,20 +187,20 @@ const createContextMenu = (items, position, target) => {
     contextMenu.style.transform = `translate(${position.x}px, ${position.y}px)`
 
     const ul = document.createElement('ul')
-    ul.classList.add('_8bfd0bd3ba9dd8201e38b1622bc74fb6-scss')
+    ul.classList.add('SboKmDrCTZng7t4EgNoM')
 
     wrapperInner.appendChild(ul);
     contextMenu.appendChild(wrapperInner)
 
     items.forEach(item => {
         const li = document.createElement('li')
-        li.classList.add('b46bba08e80cdd2d0da8cca1e49c7440-scss')
+        li.classList.add('DuEPSADpSwCcO880xjUG')
 
         const button = document.createElement('button')
 
         button.innerText = item.label
 
-        button.classList.add('d2a8e42f26357f2d21c027f30d93fb64-scss')
+        button.classList.add('wC9sIed7pfp47wZbmU6m')
 
         button.addEventListener('click', () => {
             item.action(item, target)
