@@ -4,22 +4,20 @@ const skipSeconds = 15;
 const players = [];
 let playbackRate = 1
 
-const shipHosts = ['audio-ak-spotify-com.akamaized.net']
+const shipHosts = ['audio-ak-spotify-com.akamaized.net'];
 
 document.createElement = function(tagName) {
     
     const element = createElement.call(document, tagName);
     
-    if(tagName === 'video' || tagName === 'audio')
-    {
-        const player = element;
+    const playerTags = ['video', 'audio'];
 
+    if(playerTags.includes(tagName)) {
+        const player = element;
         players.push(player);
 
         player.addEventListener('loadeddata', () => {
-            
-            const url = new URL(player.src)
-            if(shipHosts.includes(url.host)) {
+            if(isToBeSkipped(player)) {
                 player.muted = true
                 document.querySelector('svg.wheel')?.classList.add('spinning')
             }
@@ -31,8 +29,7 @@ document.createElement = function(tagName) {
         })
 
         player.addEventListener('canplaythrough', () => {
-            const url = new URL(player.src)
-            if(shipHosts.includes(url.host)) {
+            if (isToBeSkipped(player)) {
                 player.currentTime = player.duration;
             }
         })
@@ -40,6 +37,11 @@ document.createElement = function(tagName) {
 
     return element;
 };
+
+const isToBeSkipped = (player) => {
+    const url = new URL(player.currentSrc)
+    return shipHosts.includes(url.host)
+}
 
 const checker = setInterval(() => {
     const playerControls = document.querySelector('div.player-controls__buttons');
@@ -232,7 +234,7 @@ const createButton = (className, innerHTML, onClick) => {
 }
 
 const removeContextMenu = (event) => {
-    if(event.target.parentNode.className.includes('control-button-wrapper playback-speed')) return
+    if(event.target?.parentNode?.className?.includes?.('control-button-wrapper playback-speed')) return
 
     const contextMenu = document.getElementById('tippy-1')
     if(!contextMenu) return
