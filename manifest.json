@@ -1,19 +1,19 @@
 {
-    "name": "Spotify Skipper - playback speed and extended keyboard control",
-    "version": "1.0",
-    "description": "Control the playback speed and skip through tracks and podcasts with the numeric and arrow keys.",
-    "manifest_version": 3,
-    "web_accessible_resources" : [
-        {
-          "resources": ["/js/skipper.js"],
-          "matches": [ "https://open.spotify.com/*" ]
-        }
-    ],
-    "content_scripts": [
-        {
-          "matches": [ "https://open.spotify.com/*" ],
-          "css": ["css/content.css"],
-          "js": ["js/content.js"]
-        }
-    ]
+  "name": "Spotify Skipper - playback speed and extended keyboard control",
+  "version": "1.4",
+  "description": "Control the playback speed and skip through tracks and podcasts with the numeric and arrow keys.",
+  "manifest_version": 3,
+  "web_accessible_resources": [
+    {
+      "resources": ["/js/skipper.js"],
+      "matches": ["https://open.spotify.com/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://open.spotify.com/*"],
+      "css": ["css/content.css"],
+      "js": ["js/content.js"]
+    }
+  ]
 }

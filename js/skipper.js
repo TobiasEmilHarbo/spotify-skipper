@@ -4,7 +4,7 @@ const skipSeconds = 15;
 const players = [];
 let playbackRate = 1
 
-const shipHosts = ['audio-ak-spotify-com.akamaized.net'];
+const whiteListedHosts = ['https://open.spotify.com'];
 
 document.createElement = function(tagName) {
     
@@ -39,8 +39,9 @@ document.createElement = function(tagName) {
 };
 
 const isToBeSkipped = (player) => {
-    const url = new URL(player.currentSrc)
-    return shipHosts.includes(url.host)
+    const url = new URL(player.currentSrc);
+
+    return !whiteListedHosts.find((host) => url.host === host || url.origin === host);
 }
 
 const checker = setInterval(() => {
